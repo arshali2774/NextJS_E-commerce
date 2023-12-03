@@ -1,0 +1,31 @@
+// we have made a sample database in mongodb and pulled it in using "npx prisma db pull"
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "mongodb"
+  url      = env("DATABASE_URL")
+}
+
+// "model products" is changed to "model Product".
+// Since our collection name is called products because it contains many product, but in our app we want operation to be called upon "product" and not "products".
+// For e.g. product.findOne() and not products.findOne().
+// We have changed the model name and make it capitalize.
+// Now we have to tell which collection it is connected to.
+model Product {
+  id          String   @id @default(auto()) @map("_id") @db.ObjectId
+  description String
+  imageURL    String
+  name        String
+  price       Int
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+
+  // we can do that by using the "@@map" function and specifying the collection here.
+  @@map("products")
+}
+
+// now we are going to push it in using "npx prisma db push"
+// genrate prisma client - npx prisma generate
+// now we can talk with our database
